@@ -1,0 +1,27 @@
+/*Colors*/
+:root {
+}
+
+:root.dark{
+    /*dark-normal*/
+    --ryo-color-primary: #A9C7FF;
+    --ryo-color-primary-container: #00468B;
+    --ryo-color-on-primary-container: #D6E3FF;
+    --ryo-color-surface: #121316;
+    --ryo-color-on-surface-variant: #C4C6CF;
+    --ryo-color-on-surface: #C7C6CA;
+    --ryo-color-surface-container-high: #292A2D;
+    --ryo-color-surface-container-highest: #343538;
+    --ryo-color-surface-container-low: #1A1B1E;
+}
+
+/*Composable State Layers*/
+:root.dark {
+    /*dark-state-layers-color*/
+    --ryo-color-state-layers-dark-on-surface-variant: 202, 196, 208;
+
+    /*state-layers-opacity*/
+    --ryo-opacity-state-layers-008: 0.08;
+    --ryo-opacity-state-layers-012: 0.12;
+    --ryo-opacity-state-layers-016: 0.16;
+}

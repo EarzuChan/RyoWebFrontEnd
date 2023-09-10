@@ -1,0 +1,24 @@
+/*Ryo Default Profiles*/
+:root {
+    /*Motions*/
+    --ryo-motion-emphasized: 500ms; /*Begin and end on screen*/
+    --ryo-motion-emphasized-decelerate: 400ms; /*Enter the screen*/
+    --ryo-motion-emphasized-accelerate: 200ms; /*Exit the screen*/
+    --ryo-motion-standard: 300ms; /*Begin and end on screen*/
+    --ryo-motion-standard-decelerate: 250ms; /*Enter the screen*/
+    --ryo-motion-standard-accelerate: 200ms; /*Exit the screen*/
+}
+
+
+/*Css resetting*/
+* {
+    padding: 0;
+    margin: 0;
+    user-select: none;
+
+    transition: background-color var(--ryo-motion-standard), color var(--ryo-motion-standard);
+}
+
+*:focus {
+    outline: none;
+}

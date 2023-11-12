@@ -1,0 +1,34 @@
+/*Colors*/
+:root {
+}
+
+:root.dark {
+  --ryo-color-primary: #A9C7FF;
+  --ryo-color-on-primary: #003063;
+  --ryo-color-primary-container: #00468B;
+  --ryo-color-on-primary-container: #D6E3FF;
+  --ryo-color-secondary: #FFB1C8;
+  --ryo-color-on-secondary: #5E1133;
+  --ryo-color-surface: #121316;
+  --ryo-color-on-surface-variant: #C4C6CF;
+  --ryo-color-on-surface: #C7C6CA;
+  --ryo-color-surface-container-high: #292A2D;
+  --ryo-color-surface-container-highest: #343538;
+  --ryo-color-surface-container-low: #1A1B1E;
+  --ryo-color-surface-container: #1E2023;
+  --ryo-color-tertiary: #DAC900;
+  --ryo-color-on-tertiary: #363100;
+}
+
+/*Composable State Layers*/
+:root {
+  /*state-layers-opacity*/
+  --ryo-opacity-state-layers-008: 0.08;
+  --ryo-opacity-state-layers-012: 0.12;
+  --ryo-opacity-state-layers-016: 0.16;
+}
+
+:root.dark {
+  /*dark-state-layers-color*/
+  --ryo-color-state-layers-on-surface-variant: 202, 196, 208;
+}

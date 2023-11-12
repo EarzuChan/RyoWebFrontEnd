@@ -5,7 +5,7 @@
          @focusout="handleFocus(false)">
       <input class="label" ref="input"
              type="text" :value="editText"
-             @input="$emit('update:editText', $event.target.value)"
+             @input="inputText($event.target)"
              @keydown.enter.prevent="handlePressEnter"/>
       <IconButton icon="close" :size="28" @mousedown.left="clearText"/>
     </div>
@@ -29,7 +29,7 @@ const props = defineProps({
     default: '请绑定编辑文本'
   }
 })
-const emits = defineEmits(['update:editText'])
+const emit = defineEmits(['update:editText'])
 
 const notHoverAble = ref(false)
 const holderFocusing = ref(false)
@@ -43,7 +43,11 @@ function handleMouseLeave() {
 
 function clearText() {
   // console.log('Cleared')
-  emits('update:editText', '')
+  emit('update:editText', '')
+}
+
+function inputText(target: any) {
+  emit('update:editText', (target as HTMLInputElement).value)
 }
 
 function handlePressEnter() {

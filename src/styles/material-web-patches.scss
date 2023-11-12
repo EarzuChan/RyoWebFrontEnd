@@ -1,0 +1,16 @@
+@use '@material/web/color/color';
+
+:root {
+    --md-icon-font: 'Material Symbols Rounded';
+}
+
+:root.dark {
+    @include color.dark-theme;
+}
+
+:root.patch-material-web{
+    --md-sys-color-primary: var(--ryo-color-primary);
+    --md-sys-color-secondary: var(--ryo-color-secondary);
+    --md-sys-color-on-primary: var(--ryo-color-on-primary);
+    --md-sys-color-on-primary-container: var(--ryo-color-on-primary-container);
+}

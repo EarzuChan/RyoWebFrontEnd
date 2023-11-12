@@ -1,18 +1,17 @@
 <template>
   <div class="icon-button"
        :style="{height : size + 'px' , width : size + 'px'}"
-       :class="style, {'disabled' : disabled}"
+       :class="buttonStyle, {'disabled' : disabled}"
        ref="button"
        tabindex="0">
-    <div class="icon" :class="style"
+    <div class="icon"
          :style="{height : iconSize + 'px' , width : iconSize + 'px','-webkit-mask-image': `url(/src/assets/icons/icon_${icon}.svg)`}"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {defineProps} from 'vue';
-
-const props = defineProps({
+/*const props =*/
+defineProps({
   disabled: {
     type: Boolean,
     default: false,
@@ -22,7 +21,7 @@ const props = defineProps({
     default: 'default',
   },
   // 其他样式
-  style: {
+  buttonStyle: {
     type: String,
     default: 'standard',
   },
@@ -37,35 +36,56 @@ const props = defineProps({
 })
 
 // TODO:这这
-function handleClick() {
+/*function handleClick() {
   if (!props.disabled) {
   }
-}
+}*/
 </script>
 
 <style scoped>
 .icon-button {
   border-radius: 50%;
   display: flex;
+  position: relative;
 
   justify-content: center;
   align-items: center;
   cursor: pointer;
 
-  transition: all var(--ryo-motion-standard);
+  overflow: hidden;
 }
 
-.icon-button.standard:not(.disabled):hover {
-  background-color: rgba(var(--ryo-color-state-layers-dark-on-surface-variant), var(--ryo-opacity-state-layers-008));
-}
-
-.icon-button.standard:not(.disabled):active {
-  background-color: rgba(var(--ryo-color-state-layers-dark-on-surface-variant), var(--ryo-opacity-state-layers-012));
-}
-
-.icon-button.standard.disabled {
-  opacity: 0.38;
+.icon-button.disabled {
   cursor: not-allowed;
+}
+
+.icon-button::after {
+  content: "";
+  position: absolute;
+
+  transition: all var(--ryo-motion-standard);
+
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.icon-button:not(.disabled):hover::after {
+  background-color: rgba(var(--ryo-color-state-layers-on-surface-variant), var(--ryo-opacity-state-layers-008));
+}
+
+.icon-button:not(.disabled):active::after {
+  background-color: rgba(var(--ryo-color-state-layers-on-surface-variant), var(--ryo-opacity-state-layers-012));
+  //background-color: rgba(256,0,0,0.5);
+}
+
+.icon-button.filled:not(.disabled) {
+  background-color: var(--ryo-color-primary);
+}
+
+.icon-button.filled.disabled::after {
+  background-color: rgba(var(--ryo-color-state-layers-on-surface-variant), var(--ryo-opacity-state-layers-012));
 }
 
 .icon {
@@ -73,7 +93,19 @@ function handleClick() {
   -webkit-mask-position: center;
 }
 
-.icon.standard {
+.icon-button.disabled > .icon {
+  opacity: 0.38;
+}
+
+.icon-button.standard > .icon {
   background-color: var(--ryo-color-on-surface-variant)
+}
+
+.icon-button:not(.disabled).filled > .icon {
+  background-color: var(--ryo-color-on-primary)
+}
+
+.icon-button.filled.disabled > .icon {
+  background-color: var(--ryo-color-on-surface)
 }
 </style>

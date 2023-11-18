@@ -17,11 +17,10 @@
 <script lang="ts" setup>
 import '@material/web/dialog/dialog.js'
 import '@material/web/button/text-button.js'
-import {AlertButton, AlertEventType} from "../utils/AlertBuilder";
-import {Dialog} from "@material/web/dialog/internal/dialog";
-import {ref} from "vue";
+import {AlertButton, AlertEventType} from "../utils/AlertBuilder"
+import {ref} from "vue"
 
-const props = defineProps({
+/*const props =*/ defineProps({
   title: String,
   message: String,
   buttons: {
@@ -31,7 +30,7 @@ const props = defineProps({
   dismissible: Boolean
 })
 const emit = defineEmits(['close-alert', 'close-alert-animation-finished'])
-const dialog = ref<Dialog>()
+const dialog = ref<any>()
 
 const dialogClose = () => {
   let {returnValue: result} = dialog.value

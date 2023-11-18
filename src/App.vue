@@ -1,6 +1,6 @@
 <template>
   <div class="ryo-app">
-    <TopAppBar @refresh="initView"/>
+    <TopAppBar @refresh-file-tree="refreshFileTree"/>
     <div class="content-container">
       <SidePanel :data="fileTreeData" @node-select="onSelectFileTreeNode"/>
       <div class="data-container">
@@ -81,12 +81,19 @@ const initView = async () => {
   // 各种还原（配置）状态的操作
   // 由数据Manager负责罢，先检测API版本
   // 拉取数据
+
+  await new AlertBuilder().setTitle("Notice").setMessage("Early Trial Version").setActiveButton("Got It").show()
+
+  await refreshFileTree()
+}
+
+const refreshFileTree = async () => {
   try {
     fileTreeData.value = await DataManager.getInstance().getFileTreeData()
-  } catch (e) {
+  } catch (e: any) {
     // alert("未能刷新数据！")
-    await new AlertBuilder().setTitle("警告").setMessage(e.toString()).setActiveButton("了解").show()
-    console.error("未能刷新数据：" + e)
+    await new AlertBuilder().setTitle("Warning").setMessage(e.toString()).setActiveButton("Got It").show()
+    console.error("Couldn't refresh the File Tree Data: " + e)
   }
 }
 

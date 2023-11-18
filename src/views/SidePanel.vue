@@ -1,9 +1,10 @@
 <template>
   <div class="side-panel">
-    <SidePanelLabel ref="fileTreeHeadline" editable v-model:edit-text="fileTreeFilterText">文件视图</SidePanelLabel>
+    <SidePanelLabel ref="fileTreeHeadline" editable v-model:edit-text="fileTreeFilterText">File Tree</SidePanelLabel>
     <!--TODO:右侧信息-->
     <el-tree ref="fileTree" accordion :data="props.data" :indent="24" :props="defaultProps"
              :filter-node-method="filterNode" @node-click="handleNodeClick"/>
+    <!--TODO:咱就是说上面的数据刷新会导致键增加而找不到选项-->
   </div>
 </template>
 
@@ -35,8 +36,9 @@ const props = defineProps({
 const emit = defineEmits(['node-select']);
 
 // 处理点击
-const handleNodeClick = (a: any) => {
-  let [parentId, itemId] = calcId(a["$treeNodeId"])
+const handleNodeClick = (_: any, thisNode: any) => {
+  // let id = thisNodeData["$treeNodeId"]
+  let [parentId, itemId] = calcId(thisNode)//oldCalcId(id)
 
   // console.log(`${parentId}-${itemId} old:${lastTimeClick.value} ${parentId != lastTimeClick.value[0]} ${itemId != lastTimeClick.value[1]}`)
   if (parentId != lastTimeClick.value[0] || itemId != lastTimeClick.value[1]) {
@@ -47,7 +49,7 @@ const handleNodeClick = (a: any) => {
 }
 
 // 计算点击项
-const calcId = (id: number) => {
+/*const oldCalcId = (id: number) => {
   let a = 0
   for (let i = 0; i < props.data!.length; i++) {
     a++
@@ -65,7 +67,53 @@ const calcId = (id: number) => {
 
   // 没找到
   return [-1, -1]
+}*/
+
+const calcId = (node: any) => {
+  // 获取当前节点
+  let nodeData = node.data;
+
+  // 获取信息
+  let isRootNode = node.parent.parent === null
+  // console.log("是腹肌：" + isRootNode)
+  let rootData = isRootNode ? node.parent.data : node.parent.parent.data
+
+  // 获取当前父节点
+  let parentData = isRootNode ? nodeData : node.parent.data
+  // console.log(parentData)
+
+  // 坐标编号数组
+  let index = []
+  let valueToBePushed = -1
+
+  // 遍历根节点的子级，找到当前父节点的索引值
+  for (let i = 0; i < rootData.length; i++) {
+    if (rootData[i] === parentData) {
+      valueToBePushed = i
+      // console.log("找到父：" + i)
+      break
+    }
+  }
+  index.push(valueToBePushed)
+
+  valueToBePushed = -1
+  if (!isRootNode) {
+    // 遍历父节点的子级，找到当前节点的索引值
+    for (let j = 0; j < parentData.children.length; j++) {
+      if (parentData.children[j] === nodeData) {
+        valueToBePushed = j
+        // console.log("找到子：" + j)
+        break
+      }
+    }
+  }
+  index.push(valueToBePushed)
+
+  // 返回index数组
+  // console.log(index)
+  return index
 }
+
 
 // 数据对位
 const defaultProps = {

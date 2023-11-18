@@ -1,8 +1,8 @@
 <template>
-  <h1>项目元数据</h1>
+  <h1>Metadata</h1>
   <div class="horizontal-layout">
-    <p>项目名：{{ props.info.itemName }}</p>
-    <p>项目类型：{{ props.info.itemType }}</p>
+    <p>Name: {{ props.info.itemName }}</p>
+    <p>Type: {{ props.info.itemType }}</p>
   </div>
   <div class="editor-area-card">
     <div class="editor-holder"/>
@@ -11,18 +11,18 @@
       <md-filled-icon-button id="editor-reload-button">
         <md-icon>change_circle</md-icon>
       </md-filled-icon-button>
-      <div class="editor-status-text">对话树（未保存）</div>
-      <md-filled-button id="editor-save-button" @click="showNotFinishedAlert">保存</md-filled-button>
+      <div class="editor-status-text">Status</div>
+      <md-filled-button id="editor-save-button" @click="showNotFinishedAlert">Save</md-filled-button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import IconButton from "../components/IconButton.vue"
+/*import IconButton from "../components/IconButton.vue"*/
 import '@material/web/button/filled-button.js'
 import '@material/web/icon/icon.js'
 import '@material/web/iconbutton/filled-icon-button.js'
-import AlertBuilder from "../utils/AlertBuilder";
+import AlertBuilder from "../utils/AlertBuilder"
 
 export interface Info {
   itemName: string
@@ -36,7 +36,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['refresh-data', 'save-data']);
+/*const emit =*/ defineEmits(['refresh-data', 'save-data']);
 
 const notFinishedAlert = new AlertBuilder().setTitle("Not Finished").setMessage("As soon as possible!").setNegativeButton("Oops").setActiveButton("Yes Babe!").build();
 const showNotFinishedAlert = () => notFinishedAlert.show()

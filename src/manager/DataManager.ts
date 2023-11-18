@@ -1,7 +1,6 @@
-import {TreeParent} from "../views/SidePanel.vue"
+/*import {TreeParent} from "../views/SidePanel.vue"*/
 
-declare namespace chrome {
-}
+declare const chrome: any
 
 class DataManager {
     private static instance: DataManager;
@@ -9,20 +8,19 @@ class DataManager {
     static getInstance() {
         if (!this.instance) {
             this.instance = new DataManager();
-        } else {
-            console.log("呃呃")
-            console.log(this.instance)
         }
         return this.instance;
     }
 
-    private backendType: BackendType = BackendType.NoBackend
+    private readonly backendType: BackendType
+
     //private chromeMassServer: any
 
     private constructor() {
-        if (chrome["webview"]["hostObjects"] != null) {
+        if (chrome["webview"]) {
             this.backendType = BackendType.WindowsDesktopBackend
-            // this.chromeMassServer = chrome["webview"]["hostObjects"]["chromeMassServer"]
+        } else {
+            this.backendType = BackendType.NoBackend
         }
 
         console.log(this.backendType)
@@ -32,7 +30,7 @@ class DataManager {
     // 实例方法，打印name
     async getFileTreeData() {
         if (this.backendType == BackendType.WindowsDesktopBackend) {
-            return await chrome["webview"]["hostObjects"]["chromeMassServer"].GetMasses()
+            return JSON.parse(await chrome["webview"]["hostObjects"]["massServer"].GetMasses())
         } else {
             throw new Error("Cannot get File Tree Data while there's no backend or the backend is unsupported.")
         }
@@ -40,9 +38,25 @@ class DataManager {
 
     async openFile() {
         if (this.backendType == BackendType.WindowsDesktopBackend) {
-            await chrome["webview"]["hostObjects"]["chromeMassServer"].OpenFile()
+            await chrome["webview"]["hostObjects"]["massServer"].OpenFile()
         } else {
             throw new Error("Cannot open file while there's no backend or the backend is unsupported.")
+        }
+    }
+
+    async newFile() {
+        if (this.backendType == BackendType.WindowsDesktopBackend) {
+            await chrome["webview"]["hostObjects"]["massServer"].NewFile()
+        } else {
+            throw new Error("Cannot create new file while there's no backend or the backend is unsupported.")
+        }
+    }
+
+    async exitApp() {
+        if (this.backendType == BackendType.WindowsDesktopBackend) {
+            await chrome["webview"]["hostObjects"]["massServer"].ExitApp()
+        } else {
+            throw new Error("Cannot exit app while there's no backend or the backend is unsupported.")
         }
     }
 }

@@ -82,7 +82,8 @@ async function handleFocus(isFocusing: boolean) {
   display: flex;
   transition: all var(--ryo-motion-standard);
 
-  height: 20px;
+  min-height: 20px;
+  max-height: 20px;
   padding: 8px 16px 8px 16px;
   justify-content: left;
   align-items: center;

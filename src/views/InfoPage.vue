@@ -2,10 +2,10 @@
   <h1>Metadata</h1>
   <div class="horizontal-layout">
     <p>Name: {{ props.info.itemName }}</p>
-    <p>Type: {{ props.info.itemType }}</p>
+    <p>Type: Unsupported</p>
   </div>
   <div class="editor-area-card">
-    <div class="editor-holder"/>
+    <div class="editor-holder">{{ props.info.itemObj }}</div>
     <div class="editor-area-action-bar">
       <!--      <IconButton icon="reload" button-style="filled" />-->
       <md-filled-icon-button id="editor-reload-button">
@@ -25,18 +25,19 @@ import '@material/web/iconbutton/filled-icon-button.js'
 import AlertBuilder from "../utils/AlertBuilder"
 
 export interface Info {
-  itemName: string
-  itemType: string
+  itemName: string,
+  itemObj: any,
 }
 
 const props = defineProps({
   info: {
     type: Object as () => Info,
-    default: {itemName: 'No Name', itemType: 'No Type'}
+    default: {itemName: 'No Name', itemObj: {item: 'empty'}}
   }
 })
 
-/*const emit =*/ defineEmits(['refresh-data', 'save-data']);
+/*const emit =*/
+defineEmits(['refresh-data', 'save-data']);
 
 const notFinishedAlert = new AlertBuilder().setTitle("Not Finished").setMessage("As soon as possible!").setNegativeButton("Oops").setActiveButton("Yes Babe!").build();
 const showNotFinishedAlert = () => notFinishedAlert.show()
@@ -88,6 +89,10 @@ p {
 
 .editor-holder {
   background-color: var(--ryo-color-surface-container);
+
+  padding: 12px;
+  font-size: 14px;
+  color: white;
 
   flex: 1;
 }

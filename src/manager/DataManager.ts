@@ -1,69 +1,80 @@
-/*import {TreeParent} from "../views/SidePanel.vue"*/
+declare const chrome: any;
 
-declare const chrome: any
+abstract class DataManager {
+    abstract getFileTreeData(): any
 
-class DataManager {
-    private static instance: DataManager;
+    abstract openFile(): void
 
-    static getInstance() {
+    abstract newFile(): void
+
+    abstract exitApp(): void
+
+    private static instance: DataManager
+
+    abstract getItemData(fileName: string, itemName: string): any
+
+    static getInstance(): DataManager {
         if (!this.instance) {
-            this.instance = new DataManager();
+            if (chrome && chrome["webview"]) {
+                this.instance = new DesktopBackendDataManager()
+            } else {
+                this.instance = new NoBackendOrUnsupportedDataManager()
+            }
         }
-        return this.instance;
+        return this.instance
     }
-
-    private readonly backendType: BackendType
-
-    //private chromeMassServer: any
-
-    private constructor() {
-        if (chrome["webview"]) {
-            this.backendType = BackendType.WindowsDesktopBackend
-        } else {
-            this.backendType = BackendType.NoBackend
-        }
-
-        console.log(this.backendType)
-    }
-
-
-    // 实例方法，打印name
-    async getFileTreeData() {
-        if (this.backendType == BackendType.WindowsDesktopBackend) {
-            return JSON.parse(await chrome["webview"]["hostObjects"]["massServer"].GetMasses())
-        } else {
-            throw new Error("Cannot get File Tree Data while there's no backend or the backend is unsupported.")
-        }
-    }
-
-    async openFile() {
-        if (this.backendType == BackendType.WindowsDesktopBackend) {
-            await chrome["webview"]["hostObjects"]["massServer"].OpenFile()
-        } else {
-            throw new Error("Cannot open file while there's no backend or the backend is unsupported.")
-        }
-    }
-
-    async newFile() {
-        if (this.backendType == BackendType.WindowsDesktopBackend) {
-            await chrome["webview"]["hostObjects"]["massServer"].NewFile()
-        } else {
-            throw new Error("Cannot create new file while there's no backend or the backend is unsupported.")
-        }
-    }
-
-    async exitApp() {
-        if (this.backendType == BackendType.WindowsDesktopBackend) {
-            await chrome["webview"]["hostObjects"]["massServer"].ExitApp()
-        } else {
-            throw new Error("Cannot exit app while there's no backend or the backend is unsupported.")
-        }
-    }
-}
-
-enum BackendType {
-    NoBackend,
-    WindowsDesktopBackend,
 }
 
 export default DataManager
+
+class DesktopBackendDataManager implements DataManager {
+    massServer = chrome["webview"]["hostObjects"]["massServer"]
+
+    async getFileTreeData() {
+        return JSON.parse(await this.massServer.GetFileTreeData())
+    }
+
+    async openFile() {
+        await this.massServer.OpenFile()
+    }
+
+    async newFile() {
+        await this.massServer.NewFile()
+    }
+
+    async exitApp() {
+        await this.massServer.ExitApp()
+    }
+
+    async getItemData(fileName: string, itemName: string) {
+        let result = JSON.parse(await this.massServer.GetItemData(fileName, itemName))
+        if (result.error) throw("Couldn't get Item Data, due to" + result.error)
+        return result
+    }
+}
+
+class NoBackendOrUnsupportedDataManager implements DataManager {
+    getFileTreeData() {
+        this.throwInfo("get File Tree Data")
+    }
+
+    openFile() {
+        this.throwInfo("open file")
+    }
+
+    newFile() {
+        this.throwInfo("create new file")
+    }
+
+    exitApp() {
+        this.throwInfo("exit app")
+    }
+
+    getItemData(_: string, __: string): any {
+        this.throwInfo("get Item Data")
+    }
+
+    throwInfo(doSth: string) {
+        throw new Error(`Cannot ${doSth} while there's no backend or the backend is unsupported.`)
+    }
+}

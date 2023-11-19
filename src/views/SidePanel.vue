@@ -18,7 +18,6 @@ const lastTimeClick = ref([-1, -1])
 
 export interface TreeItem {
   label: string
-  type: string
 }
 
 export interface TreeParent {
@@ -119,6 +118,15 @@ const calcId = (node: any) => {
 const defaultProps = {
   children: 'children',
   label: 'label',
+  /*isLeaf: (_: any, b: any) => {
+    console.log(b)
+    if (b.parent) {
+      if (b.parent.parent === null) {
+        console.log("这是根")
+        return false
+      }
+    }
+  },*/
 }
 
 const fileTreeFilterText = ref('')

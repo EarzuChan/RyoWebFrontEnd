@@ -36,8 +36,7 @@ const fileTreeData = ref<TreeParent[]>([
     label: 'Contents',
     children: [
       {
-        label: 'Sometext',
-        type: "对话树",
+        label: 'Sometext'
       },
     ],
   },
@@ -45,12 +44,10 @@ const fileTreeData = ref<TreeParent[]>([
     label: 'Main',
     children: [
       {
-        label: 'Sometext',
-        type: "对话树",
+        label: 'Sometext'
       },
       {
-        label: 'Sometext 2',
-        type: "对话树",
+        label: 'Sometext 2'
       },
     ],
   },
@@ -58,19 +55,28 @@ const fileTreeData = ref<TreeParent[]>([
     label: 'Emojis',
     children: [
       {
-        label: 'Sometext',
-        type: "对话树",
+        label: 'Sometext'
       },
     ],
+  },
+  {
+    label: 'New File',
   },
 ])
 
 // 测试选择
-const onSelectFileTreeNode = (p: number, i: number) => {
+const onSelectFileTreeNode = async (p: number, i: number) => {
   // console.log(`${p}-${i}`)
-  if (i != -1) fileTreeNodeInfo.value = {
-    itemName: fileTreeData.value[p].children![i].label,
-    itemType: fileTreeData.value[p].children![i].type
+  if (i != -1) {
+    let mass = fileTreeData.value[p]
+    try {
+      fileTreeNodeInfo.value = {
+        itemObj: await DataManager.getInstance().getItemData(mass.label, mass.children![i].label),
+        itemName: mass.children![i].label,
+      }
+    } catch (e: any) {
+      await new AlertBuilder().setTitle("Error").setMessage(e.toString()).setActiveButton("Got It").show()
+    }
   }
 }
 

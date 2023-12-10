@@ -148,5 +148,7 @@ const filterNode = (value: string, data: any) => {
   padding: 12px;
   overflow: auto;
   background-color: var(--ryo-color-surface-container-low);
+
+  flex: 1;
 }
 </style>

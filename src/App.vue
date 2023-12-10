@@ -2,11 +2,11 @@
   <div class="ryo-app">
     <TopAppBar @refresh-file-tree="refreshFileTree"/>
     <div class="content-container">
-      <SidePanel :data="fileTreeData" @node-select="onSelectFileTreeNode"/>
-      <div class="data-container">
-        <div class="data-display-container">
+      <div class="side-panel-container">
+        <SidePanel :data="fileTreeData" @node-select="onSelectFileTreeNode"/>
+      </div>
+      <div class="main-panel-container">
           <InfoPage :info="fileTreeNodeInfo"/>
-        </div>
       </div>
     </div>
   </div>
@@ -58,9 +58,6 @@ const fileTreeData = ref<TreeParent[]>([
         label: 'Sometext'
       },
     ],
-  },
-  {
-    label: 'New File',
   },
 ])
 
@@ -115,25 +112,21 @@ initView()
 
 .content-container {
   overflow: hidden;
-  display: grid;
+  display: flex;
+  flex-direction: row;
   flex: 1;
-  grid-template-columns: 336px 1fr;
   background-color: var(--ryo-color-surface-container-high);
 }
 
-.data-container {
-  overflow: auto;
-  padding: 24px;
-
+.side-panel-container{
+  width: 336px;
   display: flex;
 }
 
-.data-display-container {
-  min-width: 400px;
-  min-height: 400px;
+.main-panel-container {
+  overflow: auto;
+  padding: 24px;
 
-  display: flex;
-  flex-direction: column;
   flex: 1;
 }
 </style>

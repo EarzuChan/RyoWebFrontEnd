@@ -10,6 +10,7 @@
 <script lang="ts" setup>
 import {onMounted, ref} from "vue"
 import IconButton from "../IconButton.vue"
+import {sleepFor} from "../../utils/UsefulUtils";
 
 const prop = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
@@ -18,7 +19,7 @@ const textField = ref<any>(null)
 const showButton = ref(prop.modelValue.length !== 0)
 
 //FIXME:修复文字删除最后一个，Prop清空，但是文本框又有原文
-const updateText = (target: any) => {
+function updateText(target: any) {
   const text = target.value
   // console.log("触发：" + text)
   emit('update:modelValue', text)
@@ -26,8 +27,9 @@ const updateText = (target: any) => {
   showButton.value = text.length !== 0
 }
 
-const clearText = () => {
+function clearText() {
   emit('update:modelValue', '')
+  // console.log("结构：" + prop.modelValue)
   showButton.value = false
 }
 

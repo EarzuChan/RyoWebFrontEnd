@@ -68,7 +68,7 @@ defineEmits(['refresh-data', 'save-data']);
 
 // 基本数据
 const allowPageDebug = ref(true)
-const editorData = shallowRef(prop.info?.itemObj)
+const editorData = ref(prop.info?.itemObj)
 const canShowEditor = ref(true)
 const pushEditorData = async (data: string) => {
   info("推送数据")

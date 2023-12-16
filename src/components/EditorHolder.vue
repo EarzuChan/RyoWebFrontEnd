@@ -11,6 +11,7 @@
 import FieldEditor from "./editors/FieldEditor.vue";
 import StringEditor from "./editors/StringEditor.vue";
 import {ref} from "vue";
+import {sleepFor} from "../utils/UsefulUtils";
 
 const prop = defineProps({'modelValue': {}, 'withMargin': Boolean})
 const emit = defineEmits(['update:modelValue'])

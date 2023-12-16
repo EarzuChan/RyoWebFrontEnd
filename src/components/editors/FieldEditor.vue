@@ -3,7 +3,7 @@
     <div v-for="(item,index) in keys" class="field-list-item" :class="{ 'even': isEven(index) }">
       <div class="item-name">{{ item }}</div>
       <div class="item-value-holder" :class="{ 'even': isEven(index) }">
-        <!--你知道吧，我怀疑下面的v-model绑定不太行，但是想不到解决方法-->
+        <!--FIXME:你知道吧，我怀疑下面的v-model绑定不太行，但是想不到解决方法-->
         <EditorHolder with-margin v-model="modelValue[item]"/>
         <!--:model-value="modelValue[item]" @update:model-value="a=>updateItem(item,a)"-->
         <!--我本来是想拷贝并缓存modelValue对象为temp，然后给temp[item]赋值，然后再emit字段更新了的temp过去，感觉也不太对，就没动-->

@@ -17,7 +17,7 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false, // 我测尼玛未使用变量
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },

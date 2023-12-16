@@ -1,7 +1,7 @@
 <template>
   <div
       :class="{'with-margin':isFieldEditor&&prop.withMargin,'editor-holder-card':isFieldEditor,'fulfill':!isFieldEditor}">
-    <component class="fulfill" :is="getEditorType(prop.modelValue)" :model-value="prop.modelValue"
+    <component class="fulfill" :is="editorType" :model-value="prop.modelValue"
                @update:model-value="a=>updateData(a)"/>
     <slot/>
   </div>
@@ -15,10 +15,16 @@ import {ref} from "vue";
 const prop = defineProps({'modelValue': {}, 'withMargin': Boolean})
 const emit = defineEmits(['update:modelValue'])
 
-const updateData = (data: any) => emit('update:modelValue', data)
+function updateData(data: any) {
+  console.log(data)
+  emit('update:modelValue', data)
+}
 
-const isFieldEditor = ref(false)
-const getEditorType = (item: any) => {
+const isFieldEditor = ref(false) // 感觉没必要ref，没想好怎么办
+
+function getEditorType(item: any) {
+  // console.log("Once you called me from: " + prop.modelValue.toString())
+
   isFieldEditor.value = false
   switch (typeof item) {
     case "string":
@@ -34,6 +40,8 @@ const getEditorType = (item: any) => {
       return FieldEditor
   }
 }
+
+const editorType = getEditorType(prop.modelValue) // 临时解决堆栈爆的权宜之计，太丑了
 </script>
 
 <style scoped>

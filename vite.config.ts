@@ -11,5 +11,5 @@ export default defineConfig({
             }
         }
     })],
-    assetsInclude: ['src/assets/icons/**'],
+    /*assetsInclude: ['src/assets/icons/!**'],*/
 })

@@ -41,8 +41,7 @@ import '@material/web/icon/icon.js'
 import '@material/web/textfield/filled-text-field.js'
 import '@material/web/iconbutton/filled-icon-button.js'
 import AlertBuilder from "../utils/AlertBuilder"
-import FieldEditor from "../components/editors/FieldEditor.vue";
-import {nextTick, reactive, ref, shallowRef/*, toRef, watch*/} from "vue"
+import {nextTick, ref, shallowRef/*, toRef, watch*/} from "vue"
 import EditorHolder from "../components/EditorHolder.vue"
 import StringEditor from "../components/editors/StringEditor.vue"
 import {sleepFor} from "../utils/UsefulUtils"
@@ -71,7 +70,7 @@ defineEmits(['refresh-data', 'save-data']);
 const allowPageDebug = ref(true)
 const editorData = shallowRef(prop.info?.itemObj)
 const canShowEditor = ref(true)
-const pushEditorData = async (data: String) => {
+const pushEditorData = async (data: string) => {
   info("推送数据")
   try {
     canShowEditor.value = false
@@ -79,7 +78,7 @@ const pushEditorData = async (data: String) => {
 
     await nextTick()
     canShowEditor.value = true
-  } catch (e: Error) {
+  } catch (e: any) {
     info("推送数据失败")
     console.log(e.message)
   }

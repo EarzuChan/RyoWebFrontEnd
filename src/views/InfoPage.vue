@@ -28,6 +28,9 @@
         <md-filled-button class="element-margin" @click="applyDebugData">Apply</md-filled-button>
       </div>
     </div>
+    <StringEditor class="element-margin" v-model="edi"/>
+    <!--<StringEditor v-model="edi"/>
+    <div>{{edi}}</div>-->
   </div>
 </template>
 
@@ -39,8 +42,10 @@ import '@material/web/textfield/filled-text-field.js'
 import '@material/web/iconbutton/filled-icon-button.js'
 import AlertBuilder from "../utils/AlertBuilder"
 import FieldEditor from "../components/editors/FieldEditor.vue";
-import {nextTick, reactive, ref, shallowRef/*, toRef, watch*/} from "vue";
-import EditorHolder from "../components/EditorHolder.vue";
+import {nextTick, reactive, ref, shallowRef/*, toRef, watch*/} from "vue"
+import EditorHolder from "../components/EditorHolder.vue"
+import StringEditor from "../components/editors/StringEditor.vue"
+import {sleepFor} from "../utils/UsefulUtils"
 
 export interface Info {
   itemName: string,
@@ -83,8 +88,13 @@ const pushEditorData = async (data: String) => {
 const notFinishedAlert = new AlertBuilder().setTitle("Not Finished").setMessage("As soon as possible!").setNegativeButton("Oops").setActiveButton("Yes Babe!").build();
 const showNotFinishedAlert = () => notFinishedAlert.show()
 
-const checkStatus = () => {
+const checkStatus = async () => {
   info("当前数据")
+  console.log(editorData.value)
+
+  await sleepFor(500)
+
+  info("等待一会后")
   console.log(editorData.value)
 }
 // TODO:追踪是否有未保存的更改
@@ -107,6 +117,8 @@ const applyDebugData = () => {
 
   pushEditorData(debugFieldData.value)
 }
+
+const edi = ref('文本框')
 </script>
 
 <style scoped>

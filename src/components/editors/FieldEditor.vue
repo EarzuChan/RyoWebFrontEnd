@@ -4,6 +4,7 @@
       <div class="item-name">{{ item }}</div>
       <div class="item-value-holder" :class="{ 'even': isEven(index) }">
         <EditorHolder with-margin v-model="modelValue[item]"/>
+        <!--:model-value="modelValue[item]" @update:model-value="a=>updateItem(item,a)"-->
       </div>
     </div>
   </div>
@@ -14,14 +15,24 @@
 
 import TextEditor from "./StringEditor.vue";
 import EditorHolder from "../EditorHolder.vue";
+import {computed} from "vue";
 
 const prop = defineProps(['modelValue'])
-defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 // const reffedEditorData = ref(props.modelValue)
 
 console.log("编辑器：组件加载")
 const keys = Object.keys(prop.modelValue)
+
+/*function updateItem(key, value) {
+  // prop.modelValue不能直接写：prop.modelValue[key]=value
+  // 更新prop.modelValue的值要调用emit('update:modelValue',newModelValue)
+  // 我想通过这个函数更新prop.modelValue[key]的值
+  let temp=prop.modelValue
+  temp[key]=value
+  emit('update:modelValue',temp)
+}*/
 
 /*const keys = ref()
 watch(

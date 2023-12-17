@@ -6,7 +6,7 @@
         <SidePanel :data="fileTreeData" @node-select="onSelectFileTreeNode"/>
       </div>
       <div class="main-panel-container">
-          <InfoPage :info="fileTreeNodeInfo"/>
+        <InfoPage :info="fileTreeNodeInfo" @super-push="a=>pushDebugInfo(a)"/>
       </div>
     </div>
   </div>
@@ -77,6 +77,17 @@ const onSelectFileTreeNode = async (p: number, i: number) => {
   }
 }
 
+// TODO:总有一天不要这个，太丑了
+function pushDebugInfo(data: string) {
+  try {
+    console.log("父级：解析数据")
+    fileTreeNodeInfo.value = {itemObj : JSON.parse(data), itemName : "Super Push Debug"}
+  } catch (e: any) {
+    console.log("父级：解析数据失败")
+    console.log(e.message)
+  }
+}
+
 // 测试信息
 const fileTreeNodeInfo = ref<Info>()
 
@@ -118,7 +129,7 @@ initView()
   background-color: var(--ryo-color-surface-container-high);
 }
 
-.side-panel-container{
+.side-panel-container {
   width: 336px;
   display: flex;
 }

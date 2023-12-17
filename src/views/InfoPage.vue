@@ -2,13 +2,13 @@
   <div class="info-page">
     <h1>Metadata</h1>
     <div class="horizontal-layout">
-      <!--更多信息-->
+      <!--TODO:更多信息-->
       <p>Name: {{ prop.info.itemName }}</p>
       <p>Type: Unsupported</p>
     </div>
     <EditorHolder class="element-margin" v-model="editorData" v-if="canShowEditor">
       <div class="editor-area-action-bar">
-        <!--<IconButton icon="reload" button-style="filled" />-->
+        <!--我的IconButton:<IconButton icon="reload" button-style="filled" />-->
         <md-filled-icon-button id="editor-reload-button" @click="showNotFinishedAlert">
           <md-icon>change_circle</md-icon>
         </md-filled-icon-button>
@@ -26,9 +26,10 @@
       <div class="debug-button-panel">
         <md-filled-button @click="allowPageDebug=false">Hide</md-filled-button>
         <md-filled-button class="element-margin" @click="applyDebugData">Apply</md-filled-button>
+        <md-filled-button class="element-margin" @click="superApplyDebugData">Super</md-filled-button>
       </div>
     </div>
-    <StringEditor class="element-margin" v-model="edi"/>
+    <!--<StringEditor class="element-margin" v-model="edi"/>-->
     <!--<StringEditor v-model="edi"/>
     <div>{{edi}}</div>-->
   </div>
@@ -41,10 +42,8 @@ import '@material/web/icon/icon.js'
 import '@material/web/textfield/filled-text-field.js'
 import '@material/web/iconbutton/filled-icon-button.js'
 import AlertBuilder from "../utils/AlertBuilder"
-import {nextTick, ref, shallowRef/*, toRef, watch*/} from "vue"
+import {nextTick, onMounted, ref, toRef, watch} from "vue"
 import EditorHolder from "../components/EditorHolder.vue"
-import StringEditor from "../components/editors/StringEditor.vue"
-import {sleepFor} from "../utils/UsefulUtils"
 
 export interface Info {
   itemName: string,
@@ -59,27 +58,33 @@ const prop = defineProps({
     default: {itemName: 'No Name', itemObj: {item: 'empty'}}
   }
 })
+// TODO:虽然说以后有状态管理器，先凑合着用吧
+onMounted(() => watch(() => prop.info, (newValue) => {
+  info("推送Prop新资源")
+  pushEditorData(newValue.itemObj)
+}, {immediate: true}))
 
 // 便捷方法
 const info = (info: String) => console.log("信息页：" + info)
 
 // 事件
-defineEmits(['refresh-data', 'save-data']);
+const emit = defineEmits(['refresh-data', 'save-data','super-push']);
 
 // 基本数据
 const allowPageDebug = ref(true)
-const editorData = ref(prop.info?.itemObj)
+const editorData = ref({})
 const canShowEditor = ref(true)
-const pushEditorData = async (data: string) => {
-  info("推送数据")
+
+async function pushEditorData(data: any) {
+  info("编辑器推送数据")
   try {
     canShowEditor.value = false
-    editorData.value = JSON.parse(data)
+    editorData.value = data
 
     await nextTick()
     canShowEditor.value = true
   } catch (e: any) {
-    info("推送数据失败")
+    info("编辑器推送数据失败")
     console.log(e.message)
   }
 }
@@ -87,15 +92,11 @@ const pushEditorData = async (data: string) => {
 const notFinishedAlert = new AlertBuilder().setTitle("Not Finished").setMessage("As soon as possible!").setNegativeButton("Oops").setActiveButton("Yes Babe!").build();
 const showNotFinishedAlert = () => notFinishedAlert.show()
 
-const checkStatus = async () => {
+function checkStatus() {
   info("当前数据")
   console.log(editorData.value)
-
-  await sleepFor(500)
-
-  info("等待一会后")
-  console.log(editorData.value)
 }
+
 // TODO:追踪是否有未保存的更改
 const isUnsaved = ref(false)
 /*watch(editorData,
@@ -108,16 +109,32 @@ const isUnsaved = ref(false)
 )*/
 
 // 调试相关
-const debugFieldData = ref("")
+const debugFieldData = ref("{\"太美丽\":\"只有为你感激\"}")
 const debugField = ref<any>(null)
-const applyDebugData = () => {
+
+function applyDebugData() {
   info("应用数据：")
   debugFieldData.value = debugField.value.value
 
-  pushEditorData(debugFieldData.value)
+  parseAndPushData(debugFieldData.value)
 }
 
-const edi = ref('文本框')
+function superApplyDebugData() {
+  info("父级数据：")
+  debugFieldData.value = debugField.value.value
+
+  emit('super-push', debugFieldData.value)
+}
+
+async function parseAndPushData(data: string) {
+  try {
+    info("解析数据")
+    await pushEditorData(JSON.parse(data))
+  } catch (e: any) {
+    info("解析数据失败")
+    console.log(e.message)
+  }
+}
 </script>
 
 <style scoped>

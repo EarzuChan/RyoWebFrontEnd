@@ -1,12 +1,14 @@
 <template>
   <div class="field-editor">
-    <div v-for="(item,index) in keys" class="field-list-item" :class="{ 'even': isEven(index) }">
-      <div class="item-name">{{ item }}</div>
-      <div class="item-value-holder" :class="{ 'even': isEven(index) }">
-        <!--FIXME:你知道吧，我怀疑下面的v-model绑定不太行，但是想不到解决方法-->
-        <EditorHolder with-margin v-model="modelValue[item]"/>
-        <!--:model-value="modelValue[item]" @update:model-value="a=>updateItem(item,a)"-->
-        <!--我本来是想拷贝并缓存modelValue对象为temp，然后给temp[item]赋值，然后再emit字段更新了的temp过去，感觉也不太对，就没动-->
+    <div class="field-holder">
+      <div v-for="(item,index) in keys" class="field-list-item" :class="{ 'even': isEven(index) }">
+        <div class="item-name">{{ item }}</div>
+        <div class="item-value-holder" :class="{ 'even': isEven(index) }">
+          <!--FIXME:你知道吧，我怀疑下面的v-model绑定不太行，但是想不到解决方法-->
+          <EditorHolder with-margin v-model="modelValue[item]"/>
+          <!--:model-value="modelValue[item]" @update:model-value="a=>updateItem(item,a)"-->
+          <!--我本来是想拷贝并缓存modelValue对象为temp，然后给temp[item]赋值，然后再emit字段更新了的temp过去，感觉也不太对，就没动-->
+        </div>
       </div>
     </div>
   </div>
@@ -54,6 +56,19 @@ const isEven = (index: number) => index % 2 != 0
 .field-editor {
   display: flex;
   flex-direction: column;
+
+  overflow-x: auto;
+}
+
+.field-holder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  min-width: 100%;
+  width: fit-content;
+
+  overflow-x: visible;
 }
 
 .field-list-item {
@@ -64,6 +79,8 @@ const isEven = (index: number) => index % 2 != 0
 
   background-color: var(--ryo-color-surface-container-high);
 }
+
+/*上面是否需要再考虑？*/
 
 .field-list-item.even {
   background-color: var(--ryo-color-surface-container-highest);

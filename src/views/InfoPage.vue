@@ -6,7 +6,7 @@
       <p>Name: {{ prop.info.itemName }}</p>
       <p>Type: Unsupported</p>
     </div>
-    <EditorHolder class="element-margin" v-model="editorData" v-if="canShowEditor">
+    <EditorHolder class="element-margin" useCard v-model="editorData" v-if="canShowEditor">
       <div class="editor-area-action-bar">
         <!--我的IconButton:<IconButton icon="reload" button-style="filled" />-->
         <md-filled-icon-button id="editor-reload-button" @click="showNotFinishedAlert">
@@ -109,7 +109,7 @@ const isUnsaved = ref(false)
 )*/
 
 // 调试相关
-const debugFieldData = ref("{\"太美丽\":\"只有为你感激\"}")
+const debugFieldData = ref("[\"太美丽\",\"只有为你感激\"]")
 const debugField = ref<any>(null)
 
 function applyDebugData() {

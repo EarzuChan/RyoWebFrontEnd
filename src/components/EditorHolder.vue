@@ -1,6 +1,6 @@
 <template>
-  <div
-      :class="{'with-margin':isFieldEditor&&prop.withMargin,'editor-holder-card':isFieldEditor,'fulfill':!isFieldEditor}">
+  <div class="use-flex"
+       :class="{'with-margin':isComplexEditor&&prop.withMargin,'editor-holder-card':isComplexEditor||useCard,'fulfill':!isComplexEditor}">
     <component class="fulfill" :is="editorType" :model-value="prop.modelValue"
                @update:model-value="a=>updateData(a)"/>
     <slot/>
@@ -8,36 +8,39 @@
 </template>
 
 <script lang="ts" setup>
-import FieldEditor from "./editors/FieldEditor.vue";
-import StringEditor from "./editors/StringEditor.vue";
+import FieldEditor from "./editors/FieldEditor.vue"
+import StringEditor from "./editors/StringEditor.vue"
 import {ref} from "vue";
 import {sleepFor} from "../utils/UsefulUtils";
+import NumberEditor from "./editors/NumberEditor.vue"
+import BooleanEditor from "./editors/BooleanEditor.vue";
+import ArrayEditor from "./editors/ArrayEditor.vue";
 
-const prop = defineProps({'modelValue': {}, 'withMargin': Boolean})
+const prop = defineProps({'modelValue': {}, 'withMargin': Boolean, 'useCard': Boolean})
 const emit = defineEmits(['update:modelValue'])
 
 function updateData(data: any) {
-  console.log(data)
+  // console.log(data)
   emit('update:modelValue', data)
 }
 
-const isFieldEditor = ref(false) // 感觉没必要ref，没想好怎么办
+const isComplexEditor = ref(false) // 感觉没必要ref，没想好怎么办
 
 function getEditorType(item: any) {
-  // console.log("Once you called me from: " + prop.modelValue.toString())
+  // console.log(typeof item)
 
-  isFieldEditor.value = false
+  isComplexEditor.value = false
+
   switch (typeof item) {
     case "string":
       return StringEditor
-      /*case "number":
-        return "NumberEditor"
-      case "boolean":
-        return "BooleanEditor"
-      case "array":
-        return "ArrayEditor"*/
+    case "number":
+      return NumberEditor
+    case "boolean":
+      return BooleanEditor
     default: // Or Object
-      isFieldEditor.value = true
+      isComplexEditor.value = true
+      if (Array.isArray(item)) return ArrayEditor
       return FieldEditor
   }
 }
@@ -52,15 +55,17 @@ const editorType = getEditorType(prop.modelValue) // 临时解决堆栈爆的权
 
   background-color: var(--ryo-color-surface-container);
 
-  display: flex;
   flex-direction: column;
   overflow: hidden;
 
   flex: 1;
 }
 
-.fulfill {
+.use-flex {
   display: flex;
+}
+
+.fulfill {
   flex: 1;
 }
 

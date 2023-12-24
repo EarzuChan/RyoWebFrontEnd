@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref} from "vue"
+import {nextTick, onMounted, ref} from "vue"
 import IconButton from "../IconButton.vue"
 import {sleepFor} from "../../utils/UsefulUtils";
 
@@ -27,16 +27,20 @@ function updateText(target: any) {
   showButton.value = text.length !== 0
 }
 
-function clearText() {
+async function clearText() {
   emit('update:modelValue', '')
   // console.log("结构：" + prop.modelValue)
   showButton.value = false
+
+  await nextTick()
+
+  fitHeight()
 }
 
 const fitHeight = () => {
   // console.log("调教")
   textField.value.style.height = '14px'
-  textField.value.style.height = textField.value.scrollHeight + 'px'
+  textField.value.style.height = (textField.value.scrollHeight + 2) + 'px'
 }
 
 onMounted(() => {

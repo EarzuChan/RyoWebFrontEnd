@@ -38,9 +38,9 @@ function getEditorType(item: any) {
       return NumberEditor
     case "boolean":
       return BooleanEditor
-    default: // Or Object
-      isComplexEditor.value = true
+    default: // Or Array
       if (Array.isArray(item)) return ArrayEditor
+      isComplexEditor.value = true
       return FieldEditor
   }
 }

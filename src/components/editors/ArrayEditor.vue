@@ -13,7 +13,7 @@
         </div>
       </template>
     </draggable>
-    <div id="add-item-button">
+    <div id="add-item-button" @click="addItem">
       <IconButton :size="32" id="add-item-icon" icon="add"/>
     </div>
   </div>
@@ -25,25 +25,33 @@ import {ref} from "vue";
 import IconButton from "../IconButton.vue";
 import EditorHolder from "../EditorHolder.vue";
 
+// TODO：＋附加，父组件给的富裕高度不铺满，组件重载。再加上文本编辑器的宽度自适应（作为atom时最小），数字编辑器的父级传递错误。
+
 const prop = defineProps(['modelValue'])
-const emit = defineEmits(['update:modelValue',])
+const emit = defineEmits(['update:modelValue'])
 const drag = ref(false)
 
 function updateData(data: any) {
   // console.log(data)
   emit('update:modelValue', data)
 }
+
+function addItem(){
+  prop.modelValue.last
+}
 </script>
 
 <style scoped>
 .array-holder {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   gap: 6px;
 }
 
 .array-editor {
   padding: 6px;
+  overflow: auto;
 }
 
 .array-item {
@@ -63,6 +71,7 @@ function updateData(data: any) {
   background-color: var(--ryo-color-surface-container-high);
   overflow: hidden;
   border-radius: 12px;
+  min-width: 32px;
 }
 
 #add-item-icon {

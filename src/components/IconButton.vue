@@ -5,7 +5,7 @@
        ref="button"
        tabindex="0">
     <div class="icon"
-         :style="{height : iconSize + 'px' , width : iconSize + 'px','-webkit-mask-image': `url(/src/assets/icons/icon_${icon}.svg)`}"/>
+         :style="{height : iconSize + 'px' , width : iconSize + 'px','-webkit-mask-image': `url(/assets/icons/icon_${icon}.svg)`}"/>
   </div>
 </template>
 
@@ -77,7 +77,7 @@ defineProps({
 
 .icon-button:not(.disabled):active::after {
   background-color: rgba(var(--ryo-color-state-layers-on-surface-variant), var(--ryo-opacity-state-layers-012));
-  //background-color: rgba(256,0,0,0.5);
+  /*background-color: rgba(256,0,0,0.5);*/
 }
 
 .icon-button.filled:not(.disabled) {

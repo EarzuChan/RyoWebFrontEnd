@@ -7,11 +7,17 @@ abstract class DataManager {
 
     abstract newFile(): void
 
+    abstract saveFile(fileName: string): void
+
+    abstract closeFile(fileName: string): void
+
     abstract exitApp(): void
 
     private static instance: DataManager
 
     abstract getItemData(fileName: string, itemName: string): any
+
+    abstract setItemData(fileName: string, itemName: string, itemData: any): void
 
     static getInstance(): DataManager {
         if (!this.instance) {
@@ -48,8 +54,21 @@ class DesktopBackendDataManager implements DataManager {
 
     async getItemData(fileName: string, itemName: string) {
         let result = JSON.parse(await this.massServer.GetItemData(fileName, itemName))
-        if (result.error) throw("Couldn't get Item Data, due to" + result.error)
+        if (result["error_getting"]) throw("Couldn't get Item Data, due to" + result["error_getting"])
         return result
+    }
+
+    async setItemData(fileName: string, itemName: string, itemData: any) {
+        let json = JSON.stringify(itemData)
+        await this.massServer.SetItemData(fileName, itemName, json)
+    }
+
+    async saveFile(fileName: string) {
+        await this.massServer.SaveFile(fileName)
+    }
+
+    async closeFile(fileName: string) {
+        await this.massServer.CloseFile(fileName)
     }
 }
 
@@ -76,5 +95,17 @@ class NoBackendOrUnsupportedDataManager implements DataManager {
 
     throwInfo(doSth: string) {
         throw new Error(`Cannot ${doSth} while there's no backend or the backend is unsupported.`)
+    }
+
+    setItemData(_: string, __: string, ___: any) {
+        this.throwInfo("set Item Data")
+    }
+
+    saveFile(_: string) {
+        this.throwInfo("save file")
+    }
+
+    closeFile(_: string) {
+        this.throwInfo("close file")
     }
 }

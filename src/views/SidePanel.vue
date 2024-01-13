@@ -3,7 +3,7 @@
     <SidePanelLabel ref="fileTreeHeadline" editable v-model:edit-text="fileTreeFilterText">File Tree</SidePanelLabel>
     <!--TODO:右侧信息-->
     <el-tree ref="fileTree" accordion :data="props.data" :indent="24" :props="defaultProps"
-             :filter-node-method="filterNode" @node-click="handleNodeClick"/>
+             :filter-node-method="filterNode" @node-click="handleNodeClick" @node-contextmenu="handleNodeRightClick"/>
     <!--TODO:咱就是说上面的数据刷新会导致键增加而找不到选项-->
   </div>
 </template>
@@ -32,10 +32,12 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['node-select']);
+const emit = defineEmits(['node-select', 'node-right-click']);
 
 // 处理点击
-const handleNodeClick = (_: any, thisNode: any) => {
+function handleNodeClick(_: any, thisNode: any) {
+  // console.log(thisNode)
+
   // let id = thisNodeData["$treeNodeId"]
   let [parentId, itemId] = calcId(thisNode)//oldCalcId(id)
 
@@ -45,6 +47,12 @@ const handleNodeClick = (_: any, thisNode: any) => {
 
     emit('node-select', parentId, itemId)
   }
+}
+
+function handleNodeRightClick(event: any, _: any, thisNode: any) {
+  let [parentId, itemId] = calcId(thisNode)
+
+  emit('node-right-click', parentId, itemId, event)
 }
 
 // 计算点击项

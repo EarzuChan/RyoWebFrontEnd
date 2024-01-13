@@ -15,8 +15,8 @@ import {sleepFor} from "../../utils/UsefulUtils";
 const prop = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue',])
 
-const currentState = ref(null)
-const anotherState = ref(null)
+const currentState = ref<any>(null)
+const anotherState = ref<any>(null)
 
 function switchState() {
   emit('update:modelValue', !prop.modelValue)

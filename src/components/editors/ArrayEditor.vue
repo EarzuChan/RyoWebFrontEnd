@@ -1,5 +1,5 @@
 <template>
-  <!--TODO:添加、一行高度最小化、宽度超出父大小就折行、添加和元素折行融洽、文本框宽度最窄、文本框清空按钮状态修复、右键删除、文本框文字选取-->
+  <!--TODO:添加、文本框宽度最窄、文本框清空按钮状态修复、右键删除、文本框文字选取-->
   <div class="array-holder array-editor">
     <draggable class="array-holder"
                :modelValue="modelValue"
@@ -8,14 +8,16 @@
                :animation="200"
                @end="drag=false">
       <template #item="{ element,index }">
-        <div class="array-item" :class="{ 'not-draggable': !enabled }">
-          <EditorHolder with-margin v-model="modelValue[index]"/>
+        <div class="array-item"><!--:class="{ 'not-draggable': !enabled" }-->
+          <EditorHolder not-use-card v-model="modelValue[index]"/>
+        </div>
+      </template>
+      <template #footer>
+        <div id="add-item-button" @click="addItem">
+          <IconButton :size="32" id="add-item-icon" icon="add"/>
         </div>
       </template>
     </draggable>
-    <div id="add-item-button" @click="addItem">
-      <IconButton :size="32" id="add-item-icon" icon="add"/>
-    </div>
   </div>
 </template>
 
@@ -25,7 +27,7 @@ import {ref} from "vue";
 import IconButton from "../IconButton.vue";
 import EditorHolder from "../EditorHolder.vue";
 
-// TODO：＋附加，父组件给的富裕高度不铺满，组件重载。再加上文本编辑器的宽度自适应（作为atom时最小），数字编辑器的父级传递错误。
+// TODO：再加上文本编辑器的宽度自适应（作为atom时最小），数字编辑器的父级传递错误，右键删除，添加
 
 const prop = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
@@ -36,7 +38,7 @@ function updateData(data: any) {
   emit('update:modelValue', data)
 }
 
-function addItem(){
+function addItem() {
   prop.modelValue.last
 }
 </script>
@@ -51,7 +53,8 @@ function addItem(){
 
 .array-editor {
   padding: 6px;
-  overflow: auto;
+  flex-direction: column;
+  gap: 0;
 }
 
 .array-item {

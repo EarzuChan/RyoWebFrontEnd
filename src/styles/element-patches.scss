@@ -49,7 +49,7 @@
     content: '';
     height: 24px;
     width: 24px;
-    -webkit-mask-image: url('/src/assets/icons/icon_chevron.svg');
+    -webkit-mask-image: url('/assets/icons/icon_chevron.svg');
     background-color: var(--ryo-color-on-surface-variant);
 }
 
@@ -58,7 +58,7 @@
 }
 
 .el-tree-node__expand-icon.is-leaf:before {
-    -webkit-mask-image: url('/src/assets/icons/icon_file_item.svg');
+    -webkit-mask-image: url('/assets/icons/icon_file_item.svg');
 }
 
 .el-tree__empty-text{

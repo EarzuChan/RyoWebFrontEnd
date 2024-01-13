@@ -20,7 +20,7 @@ const textField = ref<any>(null)
 
 const numberStateError = ref(false)
 
-const oldValue = ref(null)
+const oldValue = ref<any>(null)
 
 function updateNumber(target: any) {
   try {

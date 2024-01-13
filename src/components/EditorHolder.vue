@@ -1,8 +1,8 @@
 <template>
   <div class="use-flex"
-       :class="{'with-margin':isComplexEditor&&prop.withMargin,'editor-holder-card':isComplexEditor||useCard,'fulfill':!isComplexEditor}">
-    <component class="fulfill" :is="editorType" :model-value="prop.modelValue"
-               @update:model-value="a=>updateData(a)"/>
+       :class="{'with-margin':isComplexEditor&&prop.withMargin,'editor-holder-card':isComplexEditor && !notUseCard || useCard,'fulfill':!isComplexEditor}">
+    <component class="fulfill" :is="editorType" v-if="canShow" :model-value="prop.modelValue"
+               @update:model-value="(a:any)=>updateData(a)"/>
     <slot/>
   </div>
 </template>
@@ -10,13 +10,15 @@
 <script lang="ts" setup>
 import FieldEditor from "./editors/FieldEditor.vue"
 import StringEditor from "./editors/StringEditor.vue"
-import {ref} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import {sleepFor} from "../utils/UsefulUtils";
 import NumberEditor from "./editors/NumberEditor.vue"
 import BooleanEditor from "./editors/BooleanEditor.vue";
 import ArrayEditor from "./editors/ArrayEditor.vue";
 
-const prop = defineProps({'modelValue': {}, 'withMargin': Boolean, 'useCard': Boolean})
+// TODO:优化性能？小改不重载！
+
+const prop = defineProps({'modelValue': {}, 'withMargin': Boolean, 'useCard': Boolean, 'notUseCard': Boolean})
 const emit = defineEmits(['update:modelValue'])
 
 function updateData(data: any) {
@@ -25,6 +27,8 @@ function updateData(data: any) {
 }
 
 const isComplexEditor = ref(false) // 感觉没必要ref，没想好怎么办
+const updateTemp = ref<any>(null)
+const canShow = ref(false)
 
 function getEditorType(item: any) {
   // console.log(typeof item)
@@ -45,7 +49,16 @@ function getEditorType(item: any) {
   }
 }
 
-const editorType = getEditorType(prop.modelValue) // 临时解决堆栈爆的权宜之计，太丑了
+const editorType = ref<any>() // 临时解决堆栈爆的权宜之计，太丑了
+
+onMounted(() => watch(() => prop.modelValue, async () => {
+  console.log("Holder 接到新数据")
+
+  canShow.value = false
+  editorType.value = getEditorType(prop.modelValue)
+  await nextTick()
+  canShow.value = true
+}, {immediate: true}))
 </script>
 
 <style scoped>

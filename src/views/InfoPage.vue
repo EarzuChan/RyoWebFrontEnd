@@ -16,7 +16,7 @@
             isUnsaved === true ? "Unsaved" : /*Well*/"Unsaved Checker Unavailable"
           }}
         </div>
-        <md-filled-button id="editor-save-button" @click="checkStatus"><!--Save-->Check Status</md-filled-button>
+        <md-filled-button id="editor-save-button" @click="testSave">Save</md-filled-button>
       </div>
     </EditorHolder>
     <div class="debug-panel element-margin" v-if="allowPageDebug">
@@ -44,18 +44,20 @@ import '@material/web/iconbutton/filled-icon-button.js'
 import AlertBuilder from "../utils/AlertBuilder"
 import {nextTick, onMounted, ref, toRef, watch} from "vue"
 import EditorHolder from "../components/EditorHolder.vue"
+import DataManager from "../manager/DataManager";
 
-export interface Info {
+export interface InfoOldPageModel {
   itemName: string,
+  fileName: string,
   itemObj: any,
 }
 
 // 传入参数
-// TODO:改成页面主动请求信息
+// TODO:改成页面主动请求信息，下次重做之
 const prop = defineProps({
   info: {
-    type: Object as () => Info,
-    default: {itemName: 'No Name', itemObj: {item: 'empty'}}
+    type: Object as () => InfoOldPageModel,
+    default: {itemName: 'No Name', fileName: 'No File', itemObj: {item: 'empty'}}
   }
 })
 // TODO:虽然说以后有状态管理器，先凑合着用吧
@@ -68,21 +70,22 @@ onMounted(() => watch(() => prop.info, (newValue) => {
 const info = (info: String) => console.log("信息页：" + info)
 
 // 事件
-const emit = defineEmits(['refresh-data', 'save-data','super-push']);
+const emit = defineEmits(['refresh-data', 'save-data', 'super-push']);
 
 // 基本数据
 const allowPageDebug = ref(true)
 const editorData = ref({})
 const canShowEditor = ref(true)
 
-async function pushEditorData(data: any) {
+/*async*/
+function pushEditorData(data: any) {
   info("编辑器推送数据")
   try {
-    canShowEditor.value = false
+    // canShowEditor.value = false
     editorData.value = data
 
-    await nextTick()
-    canShowEditor.value = true
+    /*await nextTick()
+    canShowEditor.value = true*/
   } catch (e: any) {
     info("编辑器推送数据失败")
     console.log(e.message)
@@ -95,6 +98,11 @@ const showNotFinishedAlert = () => notFinishedAlert.show()
 function checkStatus() {
   info("当前数据")
   console.log(editorData.value)
+}
+
+function testSave() {
+  checkStatus()
+  DataManager.getInstance().setItemData(prop.info?.fileName, prop.info?.itemName, editorData.value)
 }
 
 // TODO:追踪是否有未保存的更改
@@ -129,7 +137,8 @@ function superApplyDebugData() {
 async function parseAndPushData(data: string) {
   try {
     info("解析数据")
-    await pushEditorData(JSON.parse(data))
+    /*await*/
+    pushEditorData(JSON.parse(data))
   } catch (e: any) {
     info("解析数据失败")
     console.log(e.message)

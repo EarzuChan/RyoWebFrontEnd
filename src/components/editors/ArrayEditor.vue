@@ -39,7 +39,7 @@ function updateData(data: any) {
 }
 
 function addItem() {
-  prop.modelValue.last
+  // TODO:这这不能，必须等到有数组强类型保障才行
 }
 </script>
 

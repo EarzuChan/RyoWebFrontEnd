@@ -26,8 +26,7 @@ function updateData(data: any) {
   emit('update:modelValue', data)
 }
 
-const isComplexEditor = ref(false) // 感觉没必要ref，没想好怎么办
-const updateTemp = ref<any>(null)
+const isComplexEditor = ref(false)
 const canShow = ref(false)
 
 function getEditorType(item: any) {
@@ -54,10 +53,14 @@ const editorType = ref<any>() // 临时解决堆栈爆的权宜之计，太丑�
 onMounted(() => watch(() => prop.modelValue, async () => {
   console.log("Holder 接到新数据")
 
-  canShow.value = false
-  editorType.value = getEditorType(prop.modelValue)
-  await nextTick()
-  canShow.value = true
+  let nowType = getEditorType(prop.modelValue)
+  console.log("新：", nowType.__name, "老：", editorType.value?.__name, "相等：", nowType.__name === editorType.value?.__name)
+  if (editorType.value?.__name !== nowType.__name) {
+    canShow.value = false
+    editorType.value = nowType
+    await nextTick()
+    canShow.value = true
+  }
 }, {immediate: true}))
 </script>
 

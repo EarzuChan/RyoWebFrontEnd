@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import {nextTick, onMounted, ref} from "vue"
+import {nextTick, onMounted, ref, watch} from "vue"
 import IconButton from "../IconButton.vue"
 import {sleepFor} from "../../utils/UsefulUtils";
 
@@ -16,25 +16,15 @@ const prop = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
 const textField = ref<any>(null)
 
-const showButton = ref(prop.modelValue.length !== 0)
+const showButton = ref(false)
 
 //FIXME:修复文字删除最后一个，Prop清空，但是文本框又有原文
 function updateText(target: any) {
-  const text = target.value
-  // console.log("触发：" + text)
-  emit('update:modelValue', text)
-  fitHeight()
-  showButton.value = text.length !== 0
+  emit('update:modelValue', target.value)
 }
 
 async function clearText() {
   emit('update:modelValue', '')
-  // console.log("结构：" + prop.modelValue)
-  showButton.value = false
-
-  await nextTick()
-
-  fitHeight()
 }
 
 const fitHeight = () => {
@@ -43,10 +33,12 @@ const fitHeight = () => {
   textField.value.style.height = (textField.value.scrollHeight + 2) + 'px'
 }
 
-onMounted(() => {
-  // console.log("创建")
+onMounted(() => watch(() => prop.modelValue, (newValue: string) => {
+  console.log("Text 接到新数据")
+
   fitHeight()
-})
+  showButton.value = newValue.length != 0
+}, {immediate: true}))
 
 </script>
 

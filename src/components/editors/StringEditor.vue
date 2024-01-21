@@ -28,14 +28,15 @@ async function clearText() {
 }
 
 const fitHeight = () => {
-  // console.log("调教")
+  // console.log("调教", textField.value.scrollHeight)
   textField.value.style.height = '14px'
   textField.value.style.height = (textField.value.scrollHeight + 2) + 'px'
 }
 
-onMounted(() => watch(() => prop.modelValue, (newValue: string) => {
-  console.log("Text 接到新数据")
+onMounted(() => watch(() => prop.modelValue, async (newValue: string) => {
+  // console.log("Text 接到新数据")
 
+  await nextTick()
   fitHeight()
   showButton.value = newValue.length != 0
 }, {immediate: true}))

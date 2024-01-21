@@ -8,15 +8,13 @@
     </div>
     <EditorHolder class="element-margin" useCard v-model="editorData" v-if="canShowEditor">
       <div class="editor-area-action-bar">
-        <!--我的IconButton:<IconButton icon="reload" button-style="filled" />-->
-        <md-filled-icon-button id="editor-reload-button" @click="showNotFinishedAlert">
-          <md-icon>change_circle</md-icon>
-        </md-filled-icon-button>
+        <IconButton icon="reload" button-style="filled" id="editor-reload-button" @click="showNotFinishedAlert"/>
+        <!--<TextButton button-style="filled">君子和而不同<br/>小人同而不和</TextButton>-->
         <div class="editor-status-text">{{
             isUnsaved === true ? "Unsaved" : /*Well*/"Unsaved Checker Unavailable"
           }}
         </div>
-        <md-filled-button id="editor-save-button" @click="testSave">Save</md-filled-button>
+        <TextButton button-style="filled" id="editor-save-button" @click="testSave">Save</TextButton>
       </div>
     </EditorHolder>
     <div class="debug-panel element-margin" v-if="allowPageDebug">
@@ -45,6 +43,8 @@ import AlertBuilder from "../utils/AlertBuilder"
 import {nextTick, onMounted, ref, toRef, watch} from "vue"
 import EditorHolder from "../components/EditorHolder.vue"
 import DataManager from "../manager/DataManager";
+import IconButton from "../components/IconButton.vue";
+import TextButton from "../components/TextButton.vue";
 
 export interface InfoOldPageModel {
   itemName: string,
@@ -73,7 +73,7 @@ const info = (info: String) => console.log("信息页：" + info)
 const emit = defineEmits(['refresh-data', 'save-data', 'super-push']);
 
 // 基本数据
-const allowPageDebug = ref(true)
+const allowPageDebug = ref(false)
 const editorData = ref({})
 const canShowEditor = ref(true)
 
@@ -215,13 +215,13 @@ p {
 
 /*特定按钮颜色*/
 #editor-reload-button {
-  --md-sys-color-primary: var(--ryo-color-secondary);
-  --md-sys-color-on-primary: var(--ryo-color-on-secondary);
+  --ryo-color-primary: var(--ryo-color-secondary);
+  --ryo-color-on-primary: var(--ryo-color-on-secondary);
 }
 
 #editor-save-button {
-  --md-sys-color-primary: var(--ryo-color-tertiary);
-  --md-sys-color-on-primary: var(--ryo-color-on-tertiary);
+  --ryo-color-primary: var(--ryo-color-tertiary);
+  --ryo-color-on-primary: var(--ryo-color-on-tertiary);
 }
 
 .debug-panel {

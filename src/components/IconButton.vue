@@ -1,11 +1,11 @@
 <template>
   <div class="icon-button"
        :style="{height : size + 'px' , width : size + 'px'}"
-       :class="buttonStyle, {'disabled' : disabled}"
+       :class="[buttonStyle, {'disabled' : disabled}]"
        ref="button"
        tabindex="0">
     <div class="icon"
-         :style="{height : iconSize + 'px' , width : iconSize + 'px','-webkit-mask-image': `url(/assets/icons/icon_${icon}.svg)`}"/>
+         :style="{height : iconSize + 'px' , width : iconSize + 'px','-webkit-mask-image': `url(/assets/icons/icon_${icon}${(filledIcon?'_filled':'')}.svg)`}"/>
   </div>
 </template>
 
@@ -13,6 +13,10 @@
 /*const props =*/
 defineProps({
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  filledIcon: {
     type: Boolean,
     default: false,
   },

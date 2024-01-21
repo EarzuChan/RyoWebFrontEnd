@@ -1,7 +1,19 @@
 <template>
   <div class="top-app-bar">
+    <IconButton icon="ryo" id="logo" :size="48"/>
     <div class="menu-bar">
-      <md-text-button class="menu-bar-button" id="file" @click="openFileMenu">File</md-text-button>
+      <TextButton :padding-horizontal="8" :padding-vertical="6" class="menu-bar-button" id="file" @click="openFileMenu">
+        File
+      </TextButton>
+      <TextButton :padding-horizontal="8" :padding-vertical="6" class="menu-bar-button" id="file">
+        Edit
+      </TextButton>
+      <TextButton :padding-horizontal="8" :padding-vertical="6" class="menu-bar-button" id="file">
+        View
+      </TextButton>
+      <TextButton :padding-horizontal="8" :padding-vertical="6" class="menu-bar-button" id="file">
+        Help
+      </TextButton>
       <md-menu id="usage-menu" anchor="file" ref="fileMenu">
         <md-menu-item id="new" @click="clickNew">
           <div slot="headline">New</div>
@@ -14,6 +26,9 @@
         </md-menu-item>
       </md-menu>
     </div>
+    <IconButton icon="minimize" :size="48"/>
+    <IconButton :icon="(isRestored?'fullscreen':'restore')" :size="48"/>
+    <IconButton icon="close" :size="48"/>
   </div>
 </template>
 
@@ -24,8 +39,12 @@ import '@material/web/menu/menu-item.js'
 import {ref} from "vue";
 import DataManager from "../manager/DataManager"
 import AlertBuilder from "../utils/AlertBuilder"
+import TextButton from "../components/TextButton.vue";
+import IconButton from "../components/IconButton.vue";
 
 const emit = defineEmits(['refresh-file-tree'])
+
+const isRestored = ref(true)
 
 const fileMenu = ref<any>()
 
@@ -71,10 +90,12 @@ const clickNew = async () => {
   display: flex;
   align-items: center;
   row-gap: 8px;
+
+  flex: 1;
 }
 
 .menu-bar-button {
-  align-items: center;
+  --ryo-color-on-surface-variant: var(--ryo-color-primary);
 }
 
 /*FIXME: 按钮和菜单样式*/

@@ -51,10 +51,10 @@ function getEditorType(item: any) {
 const editorType = ref<any>() // 临时解决堆栈爆的权宜之计，太丑了
 
 onMounted(() => watch(() => prop.modelValue, async () => {
-  console.log("Holder 接到新数据")
+  // console.log("Holder 接到新数据")
 
   let nowType = getEditorType(prop.modelValue)
-  console.log("新：", nowType.__name, "老：", editorType.value?.__name, "相等：", nowType.__name === editorType.value?.__name)
+  // console.log("新：", nowType.__name, "老：", editorType.value?.__name, "相等：", nowType.__name === editorType.value?.__name)
   if (editorType.value?.__name !== nowType.__name) {
     canShow.value = false
     editorType.value = nowType

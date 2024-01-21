@@ -3,6 +3,7 @@
     <TopAppBar @refresh-file-tree="refreshFileTree"/>
     <div class="content-container">
       <div class="side-panel-container">
+        <SidePanelBar/>
         <SidePanel :data="fileTreeData" @node-select="onSelectFileTreeNode"
                    @node-right-click="onRightClickFileTreeNode"/>
       </div>
@@ -29,6 +30,7 @@ import SidePanel, {TreeParent} from "./views/SidePanel.vue"
 import InfoPage, {InfoOldPageModel} from "./views/InfoPage.vue"
 import AlertBuilder, {AlertEventType} from "./utils/AlertBuilder"
 import DataManager from "./manager/DataManager"
+import SidePanelBar from "./views/SidePanelBar.vue";
 
 // 测试数据
 const fileTreeData = ref<TreeParent[]>([

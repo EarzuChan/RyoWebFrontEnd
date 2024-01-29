@@ -1,7 +1,7 @@
 <template>
   <div class="top-app-bar">
     <IconButton icon="ryo" id="logo" :size="48"/>
-    <div class="menu-bar">
+    <div class="menu-bar" @mousedown.self.left="dragWindow" @mouseup.self.left="dragWindowOver">
       <TextButton :padding-horizontal="8" :padding-vertical="6" class="menu-bar-button" id="file" @click="openFileMenu">
         File
       </TextButton>
@@ -26,9 +26,9 @@
         </md-menu-item>
       </md-menu>
     </div>
-    <IconButton icon="minimize" :size="48"/>
-    <IconButton :icon="(isRestored?'fullscreen':'restore')" :size="48"/>
-    <IconButton icon="close" :size="48"/>
+    <IconButton icon="minimize" @click="minimize" :size="48"/>
+    <IconButton :icon="(isRestored?'fullscreen':'restore')" @click="switchWindowState" :size="48"/>
+    <IconButton icon="close" :size="48" @click="exitApp"/>
   </div>
 </template>
 
@@ -52,7 +52,7 @@ const openFileMenu = () => {
   fileMenu.value.open = !fileMenu.value.open;
 }
 
-const exitApp = async () => {
+async function exitApp() {
   try {
     await DataManager.getInstance().exitApp()
   } catch (e: any) {
@@ -60,7 +60,7 @@ const exitApp = async () => {
   }
 }
 
-const clickOpen = async () => {
+async function clickOpen() {
   try {
     await DataManager.getInstance().openFile()
     emit("refresh-file-tree")
@@ -69,10 +69,62 @@ const clickOpen = async () => {
   }
 }
 
-const clickNew = async () => {
+async function clickNew() {
   try {
     await DataManager.getInstance().newFile()
     emit("refresh-file-tree")
+  } catch (e: any) {
+    await new AlertBuilder().setTitle("Warning").setMessage(e.toString()).setActiveButton("Got It").show()
+  }
+}
+
+async function dragWindow() {
+  try {
+    console.log("非常好移动")
+    await DataManager.getInstance().dragWindow()
+  } catch (e: any) {
+    await new AlertBuilder().setTitle("Warning").setMessage(e.toString()).setActiveButton("Got It").show()
+  }
+}
+
+async function dragWindowOver() {
+  try {
+    console.log("非常不好移动")
+    await DataManager.getInstance().dragWindowOver()
+  } catch (e: any) {
+    await new AlertBuilder().setTitle("Warning").setMessage(e.toString()).setActiveButton("Got It").show()
+  }
+}
+
+async function minimize() {
+  try {
+    await DataManager.getInstance().minimizeWindow()
+  } catch (e: any) {
+    await new AlertBuilder().setTitle("Warning").setMessage(e.toString()).setActiveButton("Got It").show()
+  }
+}
+
+async function maximize() {
+  try {
+    await DataManager.getInstance().maximizeWindow()
+  } catch (e: any) {
+    await new AlertBuilder().setTitle("Warning").setMessage(e.toString()).setActiveButton("Got It").show()
+  }
+}
+
+async function switchWindowState() {
+  if (isRestored.value) {
+    await maximize()
+  } else {
+    await restore()
+  }
+  isRestored.value = !isRestored.value
+}
+
+
+async function restore() {
+  try {
+    await DataManager.getInstance().restoreWindow()
   } catch (e: any) {
     await new AlertBuilder().setTitle("Warning").setMessage(e.toString()).setActiveButton("Got It").show()
   }
@@ -83,13 +135,12 @@ const clickNew = async () => {
 .top-app-bar {
   display: flex;
   height: 48px;
-  background-color: var(--ryo-color-surface);
 }
 
 .menu-bar {
   display: flex;
   align-items: center;
-  row-gap: 8px;
+  gap: 8px;
 
   flex: 1;
 }

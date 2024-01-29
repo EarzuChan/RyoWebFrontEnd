@@ -17,7 +17,6 @@ import IconButton from "../components/IconButton.vue";
   flex-direction: column;
   width: 48px;
   display: flex;
-  background-color: var(--ryo-color-surface);
 }
 
 .panel-buttons {

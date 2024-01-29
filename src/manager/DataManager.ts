@@ -1,3 +1,6 @@
+import {types} from "sass";
+import Error = types.Error;
+
 declare const chrome: any;
 
 abstract class DataManager {
@@ -19,6 +22,18 @@ abstract class DataManager {
 
     abstract setItemData(fileName: string, itemName: string, itemData: any): void
 
+    abstract dragResizeWindow(): void
+
+    abstract dragWindow(): void
+
+    abstract dragWindowOver(): void
+
+    abstract restoreWindow(): void
+
+    abstract minimizeWindow(): void
+
+    abstract maximizeWindow(): void
+
     static getInstance(): DataManager {
         if (!this.instance) {
             if (chrome && chrome["webview"]) {
@@ -34,41 +49,65 @@ abstract class DataManager {
 export default DataManager
 
 class DesktopBackendDataManager implements DataManager {
-    massServer = chrome["webview"]["hostObjects"]["massServer"]
+    handler = chrome["webview"]["hostObjects"]["handler"]
 
     async getFileTreeData() {
-        return JSON.parse(await this.massServer.GetFileTreeData())
+        return JSON.parse(await this.handler["GetFileTreeData"]())
     }
 
     async openFile() {
-        await this.massServer.OpenFile()
+        await this.handler["OpenFile"]()
     }
 
     async newFile() {
-        await this.massServer.NewFile()
+        await this.handler["NewFile"]()
     }
 
     async exitApp() {
-        await this.massServer.ExitApp()
+        await this.handler["ExitApp"]()
     }
 
     async getItemData(fileName: string, itemName: string) {
-        let result = JSON.parse(await this.massServer.GetItemData(fileName, itemName))
-        if (result["error_getting"]) throw("Couldn't get Item Data, due to" + result["error_getting"])
+        let result = JSON.parse(await this.handler["GetItemData"](fileName, itemName))
+        if (result["error_getting"]) throw ("Couldn't get Item Data, due to" + result["error_getting"])
         return result
     }
 
     async setItemData(fileName: string, itemName: string, itemData: any) {
         let json = JSON.stringify(itemData)
-        await this.massServer.SetItemData(fileName, itemName, json)
+        await this.handler["SetItemData"](fileName, itemName, json)
     }
 
     async saveFile(fileName: string) {
-        await this.massServer.SaveFile(fileName)
+        await this.handler["SaveFile"](fileName)
     }
 
     async closeFile(fileName: string) {
-        await this.massServer.CloseFile(fileName)
+        await this.handler["CloseFile"](fileName)
+    }
+
+    async dragResizeWindow() {
+        await this.handler["DragResizeWindow"]()
+    }
+
+    async dragWindow() {
+        await this.handler["DragWindow"]()
+    }
+
+    async dragWindowOver() {
+        await this.handler["DragWindowOver"]()
+    }
+
+    async maximizeWindow() {
+        await this.handler["MaximizeWindow"]()
+    }
+
+    async minimizeWindow() {
+        await this.handler["MinimizeWindow"]()
+    }
+
+    async restoreWindow() {
+        await this.handler["RestoreWindow"]()
     }
 }
 
@@ -107,5 +146,29 @@ class NoBackendOrUnsupportedDataManager implements DataManager {
 
     closeFile(_: string) {
         this.throwInfo("close file")
+    }
+
+    dragResizeWindow() {
+        this.throwInfo("drag to resize the Window")
+    }
+
+    dragWindow() {
+        this.throwInfo("drag the Window")
+    }
+
+    dragWindowOver() {
+        this.throwInfo("shop dragging the Window")
+    }
+
+    maximizeWindow() {
+        this.throwInfo("maximize the Window")
+    }
+
+    minimizeWindow() {
+        this.throwInfo("minimize the Window")
+    }
+
+    restoreWindow() {
+        this.throwInfo("restore the Window")
     }
 }

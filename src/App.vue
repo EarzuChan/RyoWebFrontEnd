@@ -4,9 +4,10 @@
     <div class="content-container">
       <div class="side-panel-container">
         <SidePanelBar/>
-        <SidePanel :data="fileTreeData" @node-select="onSelectFileTreeNode"
+        <SidePanel class="side-panel-itself" :data="fileTreeData" @node-select="onSelectFileTreeNode"
                    @node-right-click="onRightClickFileTreeNode"/>
       </div>
+      <!--得改下结构，不然无法让没有SidePanel时也圆角-->
       <div class="main-panel-container">
         <InfoPage :info="fileTreeNodeInfo" @super-push="a=>pushDebugInfo(a)"/>
       </div>
@@ -103,7 +104,7 @@ async function onRightClickFileTreeNode(p: number, i: number, _: any) {
 function pushDebugInfo(data: string) {
   try {
     console.log("父级：解析数据")
-    fileTreeNodeInfo.value = {itemObj: JSON.parse(data), itemName: "Super Push Debug",fileName:"Super Push File"}
+    fileTreeNodeInfo.value = {itemObj: JSON.parse(data), itemName: "Super Push Debug", fileName: "Super Push File"}
   } catch (e: any) {
     console.log("父级：解析数据失败")
     console.log(e.message)
@@ -141,6 +142,8 @@ initView()
   display: flex;
   flex-direction: column;
   height: 100vh;
+
+  background-color: var(--ryo-color-surface);
 }
 
 .content-container {
@@ -148,12 +151,17 @@ initView()
   display: flex;
   flex-direction: row;
   flex: 1;
-  background-color: var(--ryo-color-surface-container-high);
+}
+
+.side-panel-itself {
+  border-radius: 12px 0 0 0;
 }
 
 .side-panel-container {
   width: 336px;
   display: flex;
+
+  overflow: hidden;
 }
 
 .main-panel-container {
@@ -161,5 +169,7 @@ initView()
   padding: 24px;
 
   flex: 1;
+
+  background-color: var(--ryo-color-surface-container-high);
 }
 </style>
